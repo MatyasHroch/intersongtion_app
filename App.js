@@ -48,6 +48,15 @@ function generateCodeVerifier() {
   return base64UrlEncode(array).slice(0, 128);
 }
 
+async function generateCodeChallenge(verifier) {
+  const data = new TextEncoder().encode(verifier);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+
 export default {
   template: `
     <div>
