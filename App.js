@@ -28,7 +28,7 @@ async function exchangeToken(code) {
   return result.json();
 }
 
-function generateCodeChallenge(verifier) {
+async function generateCodeChallenge(verifier) {
   const data = new TextEncoder().encode(verifier);
   const digest = await crypto.subtle.digest("SHA-256", data);
   return btoa(String.fromCharCode(...new Uint8Array(digest)))
@@ -50,8 +50,8 @@ export default {
     return { message: "Hello Vue!", count: 0, users: [] };
   },
   methods: {
-    logUser() {
-      const codeChallange = generateCodeChallenge(codeVerifier);
+    async logUser() {
+      const codeChallange = await generateCodeChallenge(codeVerifier);
       localStorage.setItem("code_verifier", codeVerifier);
 
       const authUrl = `${authEndpoint}?response_type=code&client_id=${clientId}&scope=${encodeURIComponent(
