@@ -110,7 +110,7 @@ export default {
     },
     addUser(accessToken) {
       const userIdentifier = this.getNewIdentifier();
-      users.push({ accessToken, userIdentifier });
+      this.users.push({ accessToken, userIdentifier });
     },
     getLikedSongs(userIdentifier) {
       console.log("gets liked songs from spotify API");
