@@ -103,7 +103,7 @@ export default {
       }
     },
     getNewIdentifier() {
-      this.newIdentifier = "user_" + this.users.length + 1;
+      return "user_" + this.users.length + 1;
     },
     loadUsers() {
       console.log("Gets users and information from localStorage");
