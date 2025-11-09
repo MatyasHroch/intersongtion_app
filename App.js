@@ -1,5 +1,5 @@
 const clientId = "5715685e17054fdb818a86795f8bec1e";
-const redirectUri = "intersongstionapp.vercel.app"; // Your redirect uri
+const redirectUri = "https://intersongstionapp.vercel.app"; // Your redirect uri
 
 const codeVerifier = "some_random_string"; // TODO - veifier will be generated and stored per request
 const spotifyScopes =
