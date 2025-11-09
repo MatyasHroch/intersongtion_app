@@ -18,7 +18,7 @@ async function exchangeToken(code) {
       "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
     },
     body: new URLSearchParams({
-      clientId,
+      client_id: clientId,
       grant_type: "authorization_code",
       code,
       redirect_uri: redirectUri,
