@@ -64,6 +64,11 @@ export default {
       <button @click="count++">Clicked {{ count }} times</button>
       <button @click="getNewIdentifier">Clicked {{ identifier }} times</button>
       <button @click="logUser">Log new user in</button>
+      <ul>
+        <li v-for="user in users" :key="user.userIdentifier">
+          {{ user.userIdentifier }} - {{ user.accessToken }}
+        </li>
+      </ul>
     </div>
   `,
   data() {
@@ -92,6 +97,7 @@ export default {
         // Here you would typically exchange the authorization code for an access token
         const tokenData = await exchangeToken(code);
         console.log("Token Data:", tokenData);
+        this.addUser(tokenData.access_token);
       } else {
         console.log("No authorization code found in the URL");
       }
@@ -102,8 +108,9 @@ export default {
     loadUsers() {
       console.log("Gets users and information from localStorage");
     },
-    addUser() {
-      console.log("Adds a new user to localStorage and to the user list");
+    addUser(accessToken) {
+      const userIdentifier = this.getNewIdentifier();
+      users.push({ accessToken, userIdentifier });
     },
     getLikedSongs(userIdentifier) {
       console.log("gets liked songs from spotify API");
