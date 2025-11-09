@@ -21,8 +21,8 @@ async function exchangeToken(code) {
       clientId,
       grant_type: "authorization_code",
       code,
-      redirectUri,
-      codeVerifier,
+      redirect_uri: redirectUri,
+      code_verifier localStorage.getItem("code_verifier"),
     }),
   });
   return result.json();
