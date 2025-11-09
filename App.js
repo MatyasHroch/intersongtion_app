@@ -28,13 +28,24 @@ async function exchangeToken(code) {
   return result.json();
 }
 
-async function generateCodeChallenge(verifier) {
-  const data = new TextEncoder().encode(verifier);
-  const digest = await crypto.subtle.digest("SHA-256", data);
-  return btoa(String.fromCharCode(...new Uint8Array(digest)))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+// helper: base64url encode
+function base64UrlEncode(uint8Array) {
+  let str = "";
+  const chunkSize = 0x8000;
+  for (let i = 0; i < uint8Array.length; i += chunkSize) {
+    str += String.fromCharCode.apply(
+      null,
+      Array.from(uint8Array.subarray(i, i + chunkSize))
+    );
+  }
+  return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function generateCodeVerifier() {
+  const array = new Uint8Array(64);
+  crypto.getRandomValues(array);
+  // return a base64url string of length between 43 and 128
+  return base64UrlEncode(array).slice(0, 128);
 }
 
 export default {
@@ -51,14 +62,16 @@ export default {
   },
   methods: {
     async logUser() {
-      const codeChallange = await generateCodeChallenge(codeVerifier);
-      localStorage.setItem("code_verifier", codeChallange);
+      // generate and store verifier, compute challenge from it
+      const verifier = generateCodeVerifier();
+      const codeChallenge = await generateCodeChallenge(verifier);
+      sessionStorage.setItem("code_verifier", verifier); // store ORIGINAL verifier
 
       const authUrl = `${authEndpoint}?response_type=code&client_id=${clientId}&scope=${encodeURIComponent(
         spotifyScopes
       )}&redirect_uri=${encodeURIComponent(
         redirectUri
-      )}&code_challenge_method=S256&code_challenge=${codeChallange}`;
+      )}&code_challenge_method=S256&code_challenge=${codeChallenge}`;
       window.location.href = authUrl;
     },
     async handleSpotifyCallback() {
