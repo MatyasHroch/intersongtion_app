@@ -74,7 +74,7 @@ export default {
       // generate and store verifier, compute challenge from it
       const verifier = generateCodeVerifier();
       const codeChallenge = await generateCodeChallenge(verifier);
-      sessionStorage.setItem("code_verifier", verifier); // store ORIGINAL verifier
+      localStorage.setItem("code_verifier", verifier); // store ORIGINAL verifier
 
       const authUrl = `${authEndpoint}?response_type=code&client_id=${clientId}&scope=${encodeURIComponent(
         spotifyScopes
