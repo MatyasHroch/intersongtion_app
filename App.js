@@ -52,14 +52,13 @@ export default {
   methods: {
     async logUser() {
       const codeChallange = await generateCodeChallenge(codeVerifier);
-      localStorage.setItem("code_verifier", codeVerifier);
+      localStorage.setItem("code_verifier", codeChallange);
 
       const authUrl = `${authEndpoint}?response_type=code&client_id=${clientId}&scope=${encodeURIComponent(
         spotifyScopes
       )}&redirect_uri=${encodeURIComponent(
         redirectUri
       )}&code_challenge_method=S256&code_challenge=${codeChallange}`;
-      console.log(authUrl);
       window.location.href = authUrl;
     },
     async handleSpotifyCallback() {
