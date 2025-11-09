@@ -28,6 +28,15 @@ async function exchangeToken(code) {
   return result.json();
 }
 
+async function generateCodeChallenge(verifier) {
+  const data = new TextEncoder().encode(verifier);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+
 export default {
   template: `
     <div>
@@ -42,10 +51,14 @@ export default {
   },
   methods: {
     logUser() {
-      console.log("Redirects to spotify sign in page");
-      const authUrl = `${authEndpoint}?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+      const codeChallange = generateCodeChallenge(codeVerifier);
+      localStorage.setItem("code_verifier", codeVerifier);
+
+      const authUrl = `${authEndpoint}?response_type=code&client_id=${clientId}&scope=${encodeURIComponent(
+        spotifyScopes
+      )}&redirect_uri=${encodeURIComponent(
         redirectUri
-      )}&scope=${encodeURIComponent(spotifyScopes)}&response_type=code`;
+      )}&code_challenge_method=S256&code_challenge=${codeChallange}`;
       console.log(authUrl);
       window.location.href = authUrl;
     },
