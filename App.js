@@ -22,7 +22,7 @@ async function exchangeToken(code) {
       grant_type: "authorization_code",
       code,
       redirect_uri: redirectUri,
-      code_verifier localStorage.getItem("code_verifier"),
+      code_verifier: localStorage.getItem("code_verifier"),
     }),
   });
   return result.json();
