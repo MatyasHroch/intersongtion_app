@@ -60,15 +60,14 @@ async function generateCodeChallenge(verifier) {
 export default {
   template: `
     <div>
-      <h1>{{ message }}</h1>
-      <button @click="count++">Clicked {{ count }} times</button>
-      <button @click="getNewIdentifier">Clicked {{ identifier }} times</button>
-      <button @click="logUser">Log new user in</button>
-      <ul>
-        <li v-for="user in users" :key="user.userIdentifier">
+        <h1>Spotify Intersongtion</h1>
+        <button @click="logUser">Log new user in</button>
+        <button @click="getLikedSOngs">Get songs in common</button>
+        <ul>
+            <li v-for="user in users" :key="user.userIdentifier">
           {{ user.userIdentifier }} - {{ user.accessToken }}
-        </li>
-      </ul>
+            </li>
+        </ul>
     </div>
   `,
   data() {
@@ -120,14 +119,14 @@ export default {
       this.users.push({ accessToken, userIdentifier });
       localStorage.setItem("users", JSON.stringify(this.users));
     },
-    getLikedSongs() {
+    async getLikedSongs() {
       console.log("fetches liked songs for users");
       console.log(this.users);
     },
   },
-  mounted() {
+  mounted: async () => {
     debugger;
-    this.handleSpotifyCallback();
     this.loadUsers();
+    await this.handleSpotifyCallback();
   },
 };
