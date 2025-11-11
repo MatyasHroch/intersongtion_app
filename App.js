@@ -117,8 +117,8 @@ export default {
     },
     addUser(accessToken) {
       const userIdentifier = this.getNewIdentifier();
-      localStorage.setItem("users", JSON.stringify(this.users));
       this.users.push({ accessToken, userIdentifier });
+      localStorage.setItem("users", JSON.stringify(this.users));
     },
     getLikedSongs() {
       console.log("fetches liked songs for users");
