@@ -190,32 +190,30 @@ export default {
     },
   },
   computed: {
-    computed: {
-      usersSongsIds() {
-        return this.allUsersSongs.map((userSongs) => {
-          return new Set(userSongs.songs.map((item) => item.track.id));
-        });
-      },
-      intersectionIds() {
-        if (this.usersSongsIds.length === 0) return new Set();
-        return this.usersSongsIds.reduce((acc, songSet) => {
-          return new Set([...acc].filter((id) => songSet.has(id)));
-        });
-      },
-      allSongsNameAndArtists() {
-        debugger;
-        const songs = [];
-        for (const userSongs of this.allUsersSongs) {
-          for (const song of userSongs.songs) {
-            songs.push(
-              `${song.track.name} by ${song.track.artists
-                .map((artist) => artist.name)
-                .join(", ")}`
-            );
-          }
+    usersSongsIds() {
+      return this.allUsersSongs.map((userSongs) => {
+        return new Set(userSongs.songs.map((item) => item.track.id));
+      });
+    },
+    intersectionIds() {
+      if (this.usersSongsIds.length === 0) return new Set();
+      return this.usersSongsIds.reduce((acc, songSet) => {
+        return new Set([...acc].filter((id) => songSet.has(id)));
+      });
+    },
+    allSongsNameAndArtists() {
+      debugger;
+      const songs = [];
+      for (const userSongs of this.allUsersSongs) {
+        for (const song of userSongs.songs) {
+          songs.push(
+            `${song.track.name} by ${song.track.artists
+              .map((artist) => artist.name)
+              .join(", ")}`
+          );
         }
-        return songs.join(" | ");
-      },
+      }
+      return songs.join(" | ");
     },
   },
   async mounted() {
