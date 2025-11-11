@@ -203,21 +203,17 @@ export default {
         });
       },
       allSongsNameAndArtists() {
-        const songMap = new Map();
+        const songs = [];
         for (const userSongs of this.allUsersSongs) {
-          for (const item of userSongs.songs) {
-            const songId = item.track.id;
-            if (!songMap.has(songId)) {
-              songMap.set(songId, {
-                name: item.track.name,
-                artists: item.track.artists
-                  .map((artist) => artist.name)
-                  .join(", "),
-              });
-            }
+          for (const song of userSongs.songs) {
+            songs.push(
+              `${song.track.name} by ${song.track.artists
+                .map((artist) => artist.name)
+                .join(", ")}`
+            );
           }
         }
-        return songMap;
+        return songs.join(" | ");
       },
     },
   },
