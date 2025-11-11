@@ -92,7 +92,7 @@ export default {
         <span v-if="loadingSongs" class="animation-spin">Loading songs...</span>
         <span v-if="loadingSongs">Loading songs...</span>
         <div>
-         All users songs:  {{ allUsersSongs }}
+         All users songs:  {{ allSongsNameAndArtists }}
         </div>
     </div>
   `,
@@ -181,6 +181,36 @@ export default {
       //       intersongs.push(data.track);
       //     }
       //   }
+    },
+    computed: {
+      usersSongsIds() {
+        return this.allUsersSongs.map((userSongs) => {
+          return new Set(userSongs.songs.map((item) => item.track.id));
+        });
+      },
+      intersectionIds() {
+        if (this.usersSongsIds.length === 0) return new Set();
+        return this.usersSongsIds.reduce((acc, songSet) => {
+          return new Set([...acc].filter((id) => songSet.has(id)));
+        });
+      },
+      allSongsNameAndArtists() {
+        const songMap = new Map();
+        for (const userSongs of this.allUsersSongs) {
+          for (const item of userSongs.songs) {
+            const songId = item.track.id;
+            if (!songMap.has(songId)) {
+              songMap.set(songId, {
+                name: item.track.name,
+                artists: item.track.artists
+                  .map((artist) => artist.name)
+                  .join(", "),
+              });
+            }
+          }
+        }
+        return songMap;
+      },
     },
   },
   async mounted() {
