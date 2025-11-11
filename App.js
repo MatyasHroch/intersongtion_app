@@ -10,7 +10,7 @@ const spotifyTokenEndpoint = "https://accounts.spotify.com/api/token";
 
 async function fetchAllLikedSongs(spotifyAccessToken) {
   let allSongs = [];
-  let nextUrl = "https://api.spotify.com/v1/me/tracks";
+  let nextUrl = "https://api.spotify.com/v1/me/tracks?limit=50"; // initial URL to fetch liked songs
   console.log("Fetching liked songs from:", nextUrl);
   console.log("Using access token:", spotifyAccessToken);
 
