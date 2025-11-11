@@ -211,16 +211,16 @@ export default {
       });
     },
     intersongs() {
-        const intersongs = [];
-        for (const userSongs of intersectionIds) {
-            for (const item of userSongs.songs) {
-                if (this.intersectionIds.has(item.track.id)) {
-                    intersongs.push(item.track);
-                }
-            }
+      const intersongs = [];
+      for (const userSongs of intersectionIds) {
+        for (const item of userSongs.songs) {
+          if (this.intersectionIds.has(item.track.id)) {
+            intersongs.push(item.track);
+          }
         }
-        return intersongs;
-    }
+      }
+      return intersongs;
+    },
     allSongsNameAndArtists() {
       debugger;
       const songs = [];
