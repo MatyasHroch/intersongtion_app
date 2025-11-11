@@ -106,18 +106,28 @@ export default {
       return "user_" + this.users.length + 1;
     },
     loadUsers() {
-      console.log("Gets users and information from localStorage");
+      const users = localStorage.getItem("users");
+      if (users) {
+        try {
+          this.users = JSON.parse(users);
+        } catch (error) {
+          console.error("Error parsing users from localStorage:", error);
+        }
+      }
     },
     addUser(accessToken) {
       const userIdentifier = this.getNewIdentifier();
+      localStorage.setItem("users", JSON.stringify(this.users));
       this.users.push({ accessToken, userIdentifier });
     },
-    getLikedSongs(userIdentifier) {
-      console.log("gets liked songs from spotify API");
+    getLikedSongs() {
+      console.log("fetches liked songs for users");
+      console.log(this.users);
     },
   },
   mounted() {
+    debugger;
     this.handleSpotifyCallback();
-    // this.loadUsers();
+    this.loadUsers();
   },
 };
