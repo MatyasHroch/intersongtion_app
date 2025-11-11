@@ -89,9 +89,10 @@ export default {
                 {{ user.userIdentifier }} - {{ user.accessToken }}
             </li>
         </ul>
-        
+        <span v-if="loadingSongs" class="animation-spin">Loading songs...</span>
+        <span v-if="loadingSongs">Loading songs...</span>
         <div>
-         Intersongs:  {{ allUsersSongs }}
+         All users songs:  {{ allUsersSongs }}
         </div>
     </div>
   `,
@@ -100,6 +101,7 @@ export default {
       users: [],
       intersongs: [],
       allUsersSongs: [],
+      loadingSongs: false,
     };
   },
   methods: {
@@ -151,6 +153,7 @@ export default {
       localStorage.setItem("users", JSON.stringify(this.users));
     },
     async getLikedSongs() {
+      this.loadingSongs = true;
       console.log("fetches liked songs for users");
       console.log(this.users);
       for (const user of this.users) {
@@ -158,6 +161,7 @@ export default {
         this.allUsersSongs.push({ user: user.userIdentifier, songs });
       }
       console.log("All users' liked songs:", this.allUsersSongs);
+      this.loadingSongs = false;
 
       // do intersection
       // TODO - check it
