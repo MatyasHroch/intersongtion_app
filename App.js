@@ -18,7 +18,7 @@ async function fetchAllLikedSongs(spotifyAccessToken) {
   while (nextUrl) {
     const response = await fetch(nextUrl, {
       headers: {
-        Authorization: "Bearer " + access_token,
+        Authorization: "Bearer " + spotifyAccessToken,
       },
     });
     const data = await response.json();
@@ -124,7 +124,9 @@ export default {
         // Here you would typically exchange the authorization code for an access token
         const tokenData = await exchangeToken(code);
         // console.log("Token Data:", tokenData);
-        this.addUser(tokenData.access_token);
+        if (tokenData.access_token) {
+          this.addUser(tokenData.access_token);
+        }
       } else {
         console.log("No authorization code found in the URL");
       }
