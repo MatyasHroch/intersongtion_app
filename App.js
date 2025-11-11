@@ -24,7 +24,7 @@ async function fetchAllLikedSongs(spotifyAccessToken) {
     const data = await response.json();
     allSongs = allSongs.concat(data.items);
     nextUrl = data.next; // Spotify API provides the next URL for pagination
-    console.log("Fetched", data.items.length, "songs, next URL:", nextUrl);
+    console.log("Fetched", allSongs.length, "songs, next URL:", nextUrl);
   }
   return allSongs;
 }
