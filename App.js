@@ -83,7 +83,8 @@ export default {
         <h1>Spotify Intersongtion</h1>
         <button @click="logUser">Log new user in</button>
         <button @click="getLikedSongs">Get songs in common</button>
-        
+        <button @click="clearLocalStorage">Clear memory</button>
+
         <ul>
             <li v-for="user in users" :key="user.userIdentifier">
                 {{ user.userIdentifier }} - {{ user.accessToken }}
@@ -182,6 +183,13 @@ export default {
       //     }
       //   }
     },
+    clearLocalStorage() {
+      localStorage.removeItem("users");
+      this.users = [];
+      this.allUsersSongs = [];
+    },
+  },
+  computed: {
     computed: {
       usersSongsIds() {
         return this.allUsersSongs.map((userSongs) => {
