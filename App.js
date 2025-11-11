@@ -8,6 +8,23 @@ const spotifyScopes =
 const authEndpoint = "https://accounts.spotify.com/authorize";
 const spotifyTokenEndpoint = "https://accounts.spotify.com/api/token";
 
+async function fetchAllLikedSongs(spotifyAccessToken) {
+  let allSongs = [];
+  let nextUrl = "https://api.spotify.com/v1/me/tracks?limit=50";
+
+  while (nextUrl) {
+    const response = await fetch(nextUrl, {
+      headers: {
+        Authorization: `Bearer ${spotifyAccessToken}`,
+      },
+    });
+    const data = await response.json();
+    allSongs = allSongs.concat(data.items);
+    nextUrl = data.next; // Spotify API provides the next URL for pagination
+  }
+  return allSongs;
+}
+
 async function exchangeToken(code) {
   console.log("Exchanging code for token:", code);
   // Here you would typically make a POST request to Spotify's token endpoint
@@ -62,21 +79,24 @@ export default {
     <div>
         <h1>Spotify Intersongtion</h1>
         <button @click="logUser">Log new user in</button>
-        <button @click="getLikedSOngs">Get songs in common</button>
-        <div>
-         users:  {{ users }}
-        </div>
-        
+        <button @click="getLikedSongs">Get songs in common</button>
         
         <ul>
             <li v-for="user in users" :key="user.userIdentifier">
-          {{ user.userIdentifier }} - {{ user.accessToken }}
+                {{ user.userIdentifier }} - {{ user.accessToken }}
             </li>
         </ul>
+        
+        <div>
+         Intersongs:  {{ intersongs }}
+        </div>
     </div>
   `,
   data() {
-    return { message: "Hello Vue!", count: 0, users: [] };
+    return {
+      users: [],
+      intersongs: [],
+    };
   },
   methods: {
     async logUser() {
@@ -97,10 +117,10 @@ export default {
       const args = new URLSearchParams(window.location.search);
       const code = args.get("code");
       if (code) {
-        console.log("Authorization code:", code);
+        // console.log("Authorization code:", code);
         // Here you would typically exchange the authorization code for an access token
         const tokenData = await exchangeToken(code);
-        console.log("Token Data:", tokenData);
+        // console.log("Token Data:", tokenData);
         this.addUser(tokenData.access_token);
       } else {
         console.log("No authorization code found in the URL");
@@ -127,6 +147,30 @@ export default {
     async getLikedSongs() {
       console.log("fetches liked songs for users");
       console.log(this.users);
+      const allUsersSongs = [];
+      for (const user of this.users) {
+        const songs = await fetchAllLikedSongs(user.accessToken);
+        allUsersSongs.push({ user: user.userIdentifier, songs });
+      }
+      console.log("All users' liked songs:", allUsersSongs);
+      // do intersection
+      // TODO - check it
+      const songCountMap = new Map();
+      for (const userSongs of allUsersSongs) {
+        for (const item of userSongs.songs) {
+          const songId = item.track.id;
+          if (!songCountMap.has(songId)) {
+            songCountMap.set(songId, { count: 0, track: item.track });
+          }
+          songCountMap.get(songId).count += 1;
+        }
+      }
+      const intersongs = [];
+      for (const [songId, data] of songCountMap.entries()) {
+        if (data.count === this.users.length) {
+          intersongs.push(data.track);
+        }
+      }
     },
   },
   async mounted() {
