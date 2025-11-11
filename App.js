@@ -9,7 +9,6 @@ const authEndpoint = "https://accounts.spotify.com/authorize";
 const spotifyTokenEndpoint = "https://accounts.spotify.com/api/token";
 
 async function fetchAllLikedSongs(spotifyAccessToken) {
-  debugger;
   let allSongs = [];
   let nextUrl = "https://api.spotify.com/v1/me/tracks";
   console.log("Fetching liked songs from:", nextUrl);
@@ -92,7 +91,7 @@ export default {
         </ul>
         
         <div>
-         Intersongs:  {{ intersongs }}
+         Intersongs:  {{ allUsersSongs }}
         </div>
     </div>
   `,
@@ -100,6 +99,7 @@ export default {
     return {
       users: [],
       intersongs: [],
+      allUsersSongs: [],
     };
   },
   methods: {
@@ -153,35 +153,33 @@ export default {
     async getLikedSongs() {
       console.log("fetches liked songs for users");
       console.log(this.users);
-      const allUsersSongs = [];
       for (const user of this.users) {
         const songs = await fetchAllLikedSongs(user.accessToken);
-        allUsersSongs.push({ user: user.userIdentifier, songs });
+        this.allUsersSongs.push({ user: user.userIdentifier, songs });
       }
-      debugger;
-      console.log("All users' liked songs:", allUsersSongs);
+      console.log("All users' liked songs:", this.allUsersSongs);
+
       // do intersection
       // TODO - check it
-      const songCountMap = new Map();
-      for (const userSongs of allUsersSongs) {
-        for (const item of userSongs.songs) {
-          const songId = item.track.id;
-          if (!songCountMap.has(songId)) {
-            songCountMap.set(songId, { count: 0, track: item.track });
-          }
-          songCountMap.get(songId).count += 1;
-        }
-      }
-      const intersongs = [];
-      for (const [songId, data] of songCountMap.entries()) {
-        if (data.count === this.users.length) {
-          intersongs.push(data.track);
-        }
-      }
+      //   const songCountMap = new Map();
+      //   for (const userSongs of allUsersSongs) {
+      //     for (const item of userSongs.songs) {
+      //       const songId = item.track.id;
+      //       if (!songCountMap.has(songId)) {
+      //         songCountMap.set(songId, { count: 0, track: item.track });
+      //       }
+      //       songCountMap.get(songId).count += 1;
+      //     }
+      //   }
+      //   const intersongs = [];
+      //   for (const [songId, data] of songCountMap.entries()) {
+      //     if (data.count === this.users.length) {
+      //       intersongs.push(data.track);
+      //     }
+      //   }
     },
   },
   async mounted() {
-    debugger;
     this.loadUsers();
     await this.handleSpotifyCallback();
   },
