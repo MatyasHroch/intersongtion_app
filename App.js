@@ -203,6 +203,7 @@ export default {
         });
       },
       allSongsNameAndArtists() {
+        debugger;
         const songs = [];
         for (const userSongs of this.allUsersSongs) {
           for (const song of userSongs.songs) {
