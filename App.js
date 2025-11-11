@@ -129,7 +129,7 @@ export default {
       console.log(this.users);
     },
   },
-  mounted: async () => {
+  async mounted() {
     debugger;
     this.loadUsers();
     await this.handleSpotifyCallback();
