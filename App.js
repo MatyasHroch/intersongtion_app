@@ -157,6 +157,7 @@ export default {
         const songs = await fetchAllLikedSongs(user.accessToken);
         allUsersSongs.push({ user: user.userIdentifier, songs });
       }
+      debugger;
       console.log("All users' liked songs:", allUsersSongs);
       // do intersection
       // TODO - check it
