@@ -92,6 +92,15 @@ export default {
         </ul>
         <span v-if="loadingSongs" class="animation-spin">Loading songs...</span>
         <span v-if="loadingSongs">Loading songs...</span>
+        <br/>
+        <div>
+         Intersongtion length:  {{ intersongs.length }}
+        </div>
+        <br/>
+        <div>
+         Intersongtion:  {{ intersongs }}
+        </div>
+        <br/>
         <div>
          All users songs:  {{ allSongsNameAndArtists }}
         </div>
@@ -201,6 +210,17 @@ export default {
         return new Set([...acc].filter((id) => songSet.has(id)));
       });
     },
+    intersongs() {
+        const intersongs = [];
+        for (const userSongs of intersectionIds) {
+            for (const item of userSongs.songs) {
+                if (this.intersectionIds.has(item.track.id)) {
+                    intersongs.push(item.track);
+                }
+            }
+        }
+        return intersongs;
+    }
     allSongsNameAndArtists() {
       debugger;
       const songs = [];
