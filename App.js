@@ -63,6 +63,11 @@ export default {
         <h1>Spotify Intersongtion</h1>
         <button @click="logUser">Log new user in</button>
         <button @click="getLikedSOngs">Get songs in common</button>
+        <div>
+         users:  {{ users }}
+        </div>
+        
+        
         <ul>
             <li v-for="user in users" :key="user.userIdentifier">
           {{ user.userIdentifier }} - {{ user.accessToken }}
